@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ItemInput {
+public class Item {
 	private String shortDescription;
 	private String price;
 }

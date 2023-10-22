@@ -1,5 +1,6 @@
 package com.aaronalberg.fetchtakehome.service;
 
+import com.aaronalberg.fetchtakehome.model.Item;
 import com.aaronalberg.fetchtakehome.model.Receipt;
 import com.aaronalberg.fetchtakehome.model.ReceiptDB;
 import com.aaronalberg.fetchtakehome.model.ReceiptInput;
@@ -25,19 +26,19 @@ public class ReceiptProcessorService {
 	 */
 	public String processReceipt(ReceiptInput input) {
 		validateInputPresent(input);
-		int pointsAwarded = awardPoints(input);
 
-		// create receipt entity in DB
 		Receipt receiptEntity = Receipt.builder()
 			.id(UUID.randomUUID().toString())
 			.retailer(input.getRetailer())
 			.purchaseDate(LocalDate.parse(input.getPurchaseDate()))
 			.purchaseTime(LocalTime.parse(input.getPurchaseTime()))
 			.total(parseDouble(input.getTotal()))
-			.itemInputs(input.getItemInputs())
-			.pointsAwarded(pointsAwarded)
+			.items(input.getItems())
 			.build();
 
+		int pointsAwarded = awardPoints(receiptEntity);
+
+		receiptEntity.setPointsAwarded(pointsAwarded);
 
 
 		receiptDB.addReceipt(receiptEntity);
@@ -45,9 +46,55 @@ public class ReceiptProcessorService {
 		return receiptEntity.getId();
 	}
 
-	private int awardPoints(ReceiptInput input) {
-		// TODO update logic
-		return 3058;
+	private int awardPoints(Receipt receipt) {
+		int grandTotal = 0;
+
+		// One point for every alphanumeric character in the retailer name.
+		int alphanumericCount = 0;
+		for (char c : receipt.getRetailer().toCharArray()) {
+			if (Character.isLetterOrDigit(c)) {
+				alphanumericCount++;
+			}
+		}
+		grandTotal += alphanumericCount;
+
+		// 50 points if the total is a round dollar amount with no cents.
+		if (receipt.getTotal() % 1 == 0) {
+			grandTotal += 50;
+		}
+
+		// 25 points if the total is a multiple of 0.25.
+		if (receipt.getTotal() % .25 == 0) {
+			grandTotal += 25;
+		}
+
+		// 5 points for every two items on the receipt.
+		int itemSizeQuotient = receipt.getItems().size() / 2;
+		grandTotal += (itemSizeQuotient * 5);
+
+		// If the trimmed length of the item description is a multiple of 3,
+		// multiply the price by 0.2 and round up to the nearest integer.
+		// The result is the number of points earned.
+		for (Item item : receipt.getItems()) {
+			if (item.getShortDescription().trim().length() % 3 == 0) {
+				double price = parseDouble(item.getPrice());
+				grandTotal += (int) Math.ceil(price * .2);
+			}
+		}
+
+		// 6 points if the day in the purchase date is odd.
+		if (receipt.getPurchaseDate().getDayOfMonth() % 2 == 1) {
+			grandTotal += 6;
+		}
+
+		// 10 points if the time of purchase is after 2:00pm and before 4:00pm.
+		if (receipt.getPurchaseTime().isAfter(LocalTime.parse("14:00")) &&
+		receipt.getPurchaseTime().isBefore(LocalTime.parse("16:00"))) {
+			grandTotal += 10;
+		}
+
+
+		return grandTotal;
 	}
 
 	private void validateInputPresent(ReceiptInput input) {
@@ -68,8 +115,8 @@ public class ReceiptProcessorService {
 			throw new IllegalArgumentException("not all fields present");
 		}
 
-		if (input.getItemInputs().isEmpty()) {
-			throw new IllegalArgumentException("no total");
+		if (input.getItems().isEmpty()) {
+			throw new IllegalArgumentException("no items");
 		}
 	}
 }

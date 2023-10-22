@@ -17,7 +17,7 @@ public class Receipt {
 	private LocalDate purchaseDate;
 	private LocalTime purchaseTime;
 	private double total;
-	private List<ItemInput> itemInputs;
+	private List<Item> items;
 	private int pointsAwarded;
 
 }

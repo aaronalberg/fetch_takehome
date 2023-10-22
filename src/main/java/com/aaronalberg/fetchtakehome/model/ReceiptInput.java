@@ -14,6 +14,6 @@ public class ReceiptInput {
 	private String purchaseDate;
 	private String purchaseTime;
 	private String total;
-	private List<ItemInput> itemInputs;
+	private List<Item> items;
 
 }
