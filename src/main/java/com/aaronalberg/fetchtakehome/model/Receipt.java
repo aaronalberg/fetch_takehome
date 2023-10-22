@@ -13,11 +13,11 @@ import java.util.List;
 @Builder
 public class Receipt {
 	private String id;
+	private int pointsAwarded;
+
 	private String retailer;
 	private LocalDate purchaseDate;
 	private LocalTime purchaseTime;
 	private double total;
 	private List<Item> items;
-	private int pointsAwarded;
-
 }

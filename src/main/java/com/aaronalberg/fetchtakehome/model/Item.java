@@ -9,5 +9,5 @@ import lombok.Setter;
 @Builder
 public class Item {
 	private String shortDescription;
-	private String price;
+	private double price;
 }

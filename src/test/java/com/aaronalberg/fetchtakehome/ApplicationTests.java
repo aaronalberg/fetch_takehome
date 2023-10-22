@@ -1,7 +1,6 @@
 package com.aaronalberg.fetchtakehome;
 
 import com.aaronalberg.fetchtakehome.model.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,11 +62,11 @@ class ApplicationTests {
 	}
 
 	private ProcessReceiptOutput postReceipt1Helper() throws Exception {
-		Item item1 = Item.builder().price("6.49").shortDescription("Mountain Dew 12PK").build();
-		Item item2 = Item.builder().price("12.25").shortDescription("Emils Cheese Pizza").build();
-		Item item3 = Item.builder().price("1.26").shortDescription("Knorr Creamy Chicken").build();
-		Item item4 = Item.builder().price("3.35").shortDescription("Doritos Nacho Cheese").build();
-		Item item5 = Item.builder().price("12.0").shortDescription("   Klarbrunn 12-PK 12 FL OZ  ").build();
+		Item item1 = Item.builder().price(6.49).shortDescription("Mountain Dew 12PK").build();
+		Item item2 = Item.builder().price(12.25).shortDescription("Emils Cheese Pizza").build();
+		Item item3 = Item.builder().price(1.26).shortDescription("Knorr Creamy Chicken").build();
+		Item item4 = Item.builder().price(3.35).shortDescription("Doritos Nacho Cheese").build();
+		Item item5 = Item.builder().price(12.0).shortDescription("   Klarbrunn 12-PK 12 FL OZ  ").build();
 
 		ReceiptInput input = ReceiptInput.builder()
 			.retailer("Target")
@@ -110,10 +109,10 @@ class ApplicationTests {
 	}
 
 	private ProcessReceiptOutput postReceipt2Helper() throws Exception {
-		Item item1 = Item.builder().price("2.25").shortDescription("Gatorade").build();
-		Item item2 = Item.builder().price("2.25").shortDescription("Gatorade").build();
-		Item item3 = Item.builder().price("2.25").shortDescription("Gatorade").build();
-		Item item4 = Item.builder().price("2.25").shortDescription("Gatorade").build();
+		Item item1 = Item.builder().price(2.25).shortDescription("Gatorade").build();
+		Item item2 = Item.builder().price(2.25).shortDescription("Gatorade").build();
+		Item item3 = Item.builder().price(2.25).shortDescription("Gatorade").build();
+		Item item4 = Item.builder().price(2.25).shortDescription("Gatorade").build();
 
 		ReceiptInput input = ReceiptInput.builder()
 			.retailer("M&M Corner Market")

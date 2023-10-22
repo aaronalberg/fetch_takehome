@@ -77,8 +77,7 @@ public class ReceiptProcessorService {
 		// The result is the number of points earned.
 		for (Item item : receipt.getItems()) {
 			if (item.getShortDescription().trim().length() % 3 == 0) {
-				double price = parseDouble(item.getPrice());
-				grandTotal += (int) Math.ceil(price * .2);
+				grandTotal += (int) Math.ceil(item.getPrice() * .2);
 			}
 		}
 
@@ -99,7 +98,7 @@ public class ReceiptProcessorService {
 
 	private void validateInputPresent(ReceiptInput input) {
 
-		boolean allNull = Arrays.stream(input.getClass()
+		boolean anyNull = Arrays.stream(input.getClass()
 				.getDeclaredFields())
 			.peek(f -> f.setAccessible(true))
 			.map(f -> {
@@ -109,14 +108,18 @@ public class ReceiptProcessorService {
 					throw new RuntimeException(e);
 				}
 			})
-			.allMatch(Objects::isNull);
+			.anyMatch(Objects::isNull);
 
-		if (allNull) {
+		if (anyNull) {
 			throw new IllegalArgumentException("not all fields present");
 		}
 
 		if (input.getItems().isEmpty()) {
 			throw new IllegalArgumentException("no items");
+		}
+
+		if (input.getItems().stream().mapToDouble(Item::getPrice).sum() != parseDouble(input.getTotal())) {
+			throw new IllegalArgumentException("total should be equal to sum of items");
 		}
 	}
 }
