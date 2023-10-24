@@ -36,11 +36,20 @@ These rules collectively define how many points should be awarded to a receipt.
 
 ## Running the web server
 ### Option 1 - Docker
+If you are on a device with an arm64 architecture (Apple Silicon Macs):
 ```
 docker pull aaronalberg/fetch-takehome
 ```
 ```
 docker run --publish 8080:8080 aaronalberg/fetch-takehome
+```
+
+If you are on a device with an amd64 architecture (most other personal machines):
+```
+docker pull aaronalberg/fetch-takehome-amd64
+```
+```
+docker run --publish 8080:8080 aaronalberg/fetch-takehome-amd64
 ```
 
 ### Option 2 - Intellij IDEA
